@@ -16,6 +16,7 @@ function App() {
     setState(!state);
   }
   const [usr] = useContext(AuthContext);
+  const [logOut, loadingLogOut, errorLogOut] = useSignOut(auth);
   //console.log("USR",usr);
   const [value, loadingValue, errValue] = useCollection(
     query(collection(firestore, 'usuarios'),where("correo","==",`${usr?.email}`)),
@@ -43,11 +44,14 @@ function App() {
         </a>
         {
           usr?(
-            value && (
+            value ? (
               value.docs.map((doc)=>(
                 <Navigate to={doc.get("rol")}/>
               ))
-            )
+            ):
+            <button onClick={async ()=>await logOut()}>
+                Salir sesion
+            </button>
           )
           :
           <LoginBox auth={auth} state={state}></LoginBox>
