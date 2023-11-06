@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import { IconButton } from "@mui/material";
+import { IconButton, Switch } from "@mui/material";
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import AddIcon from '@mui/icons-material/Add';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { updateDoc } from "firebase/firestore";
+import RemoveIcon from '@mui/icons-material/Remove';
 import { Dropdownlist } from "../../Dropdownlist";
 import { ImageToggle } from "../Habitacion/ImageToggle";
 
 export const ItemsFila = (
     {e,index,handleDelete,deleteArray,eliminar, data}
 ) => {
-    const [nombre, setNombre] = useState(e.data()?.Nombre);
     const [cantidad, setCantidad] = useState(e.data()?.Cantidad);
-    const [comerciabilidad, setComerciabilidad] = useState(e.data()?.Estado);
+    const [comerciabilidad, setComerciabilidad] = useState(e.data()?.Comerciabilidad);
     const [estate, setState] = useState(false);
     const [modificar, setModificar] = useState(false);
     const [precio, setPrecio] = useState(e.data()?.Precio);
@@ -21,13 +22,24 @@ export const ItemsFila = (
             setModificar(!modificar);
         } else{
             await updateDoc(e.ref,{
-                Nombre: nombre,
                 Cantidad: cantidad,
-                Estado: comerciabilidad,
+                Comerciabilidad: comerciabilidad,
                 Precio: precio,
             })
             setModificar(!modificar);
         }
+    }
+    const handleAdd = async () =>{
+        await updateDoc(e.ref,{
+            Precio: precio+1,
+        });
+        setPrecio(precio+1);
+    }
+    const handleMinus = async () =>{
+        await updateDoc(e.ref,{
+            Precio: precio-1,
+        });
+        setPrecio(precio-1);
     }
     //console.log("delArray",index,deleteArray);
     useEffect(()=>{
@@ -39,20 +51,25 @@ export const ItemsFila = (
         //console.log(index, deleteArray[index])
     },[estate]);
     useEffect(()=>{
-        setNombre(e.data()?.Nombre);
         setCantidad(e.data()?.Cantidad);
         setPrecio(e.data()?.Precio);
-        setComerciabilidad(e.data()?.Estado);
+        setComerciabilidad(e.data()?.Comerciabilidad);
     },[modificar]);
     return (
         <div>
             {
                 !modificar?(
                     <div>
-                    {e.data()?.Nombre} 
+                    {e.id}
                     {e.data()?.Cantidad} 
+                    <IconButton onClick={handleMinus} disabled={precio===0}>
+                        <RemoveIcon/>
+                    </IconButton>
                     {e.data()?.Precio}
-                    {e.data()?.Estado.toString()}
+                    <IconButton onClick={handleAdd}>
+                        <AddIcon/>
+                    </IconButton>
+                    {e.data()?.Comerciabilidad?<>Comerciable</>:<>No comerciable</>}
                     {eliminar&&<ImageToggle handleState={setState} index={index}/>}
                     <IconButton onClick={handleModificar}>
                         <DriveFileRenameOutlineIcon/>
@@ -60,17 +77,15 @@ export const ItemsFila = (
                     </div>
                 ):(
                     <div>
-                        <input value={nombre} type="text" onChange={(event)=>{
-                            setNombre(event.target.value);
-                        }}/>
                         <input value={cantidad} type="number" onChange={(event)=>{
                             setCantidad(event.target.value);
                         }}/>
                         <input value={precio} type="number" onChange={(event)=>{
                             setPrecio(event.target.value);
                         }}/>
-                        <Dropdownlist updateData={setComerciabilidad} arrData={data}
-                            defaultValue={comerciabilidad.toString()}/>
+                        <Switch checked={comerciabilidad} onChange={()=>setComerciabilidad(!comerciabilidad)}
+                            inputProps={{ 'aria-label': 'controlled' }}/>
+                        <label>{`${comerciabilidad?"Comerciable":"No comerciable"}`}</label>
                         <IconButton onClick={handleModificar}>
                             <DoneIcon/>
                         </IconButton>

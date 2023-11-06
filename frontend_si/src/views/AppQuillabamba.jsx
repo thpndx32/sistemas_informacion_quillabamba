@@ -19,7 +19,7 @@ export const AppQuillabamba = () => {
 
     const [usr,loadingusr, errorusr] = useAuthState(auth);
     const [data , loadingData, errorData] = useCollection(query(collection(firestore,"usuarios"),where("correo","==",`${usr?.email}`)));
-    console.log("data",data);
+    //console.log("data",data);
     //console.log("quilla",usr);
     return (
         (!loadingusr && <AuthContext.Provider value={[usr,data, loadingData]}>

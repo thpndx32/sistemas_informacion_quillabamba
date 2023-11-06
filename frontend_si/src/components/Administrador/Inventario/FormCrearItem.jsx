@@ -1,5 +1,5 @@
 import { Box, Button, Modal, Typography } from "@mui/material"
-import { addDoc, collection, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, query, setDoc, where } from "firebase/firestore";
 import { firestore } from "../../../config/firebase";
 import { useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -39,16 +39,16 @@ export const FormCrearItem= (
         }
     }
     const createItem = async() =>{
-        console.log("data",data.docs);
         if(data.docs.length===0){
-            const docuRef = await addDoc(collection(firestore, path),{
-                Nombre: nombre,
+            const docRef = doc(collection(firestore,path), nombre);
+
+            await setDoc(docRef,{
                 Cantidad: cantidad,
-                Estado: comerciabilidad,
+                Comerciabilidad: comerciabilidad,
                 Precio: precio,
                 activa: true,
             });
-            console.log("documento", docuRef.id);
+            console.log("documento", docRef.id);
             setErrActividad(false);
             handleClose();
         } else{
@@ -65,19 +65,26 @@ export const FormCrearItem= (
                 setActividad(false);
                 return;
             }
-            const docuRef = await addDoc(collection(firestore, path),{
-                Nombre: nombre,
+            const docRef = doc(collection(firestore,path), nombre);
+
+            await setDoc(docRef,{
                 Cantidad: cantidad,
-                Estado: comerciabilidad,
+                Comerciabilidad: comerciabilidad,
                 Precio: precio,
                 activa: true,
             });
-            console.log("documento", docuRef.id);
+            console.log("documento", docRef.id);
             setErrActividad(false);
             handleClose();
         }
     }
-
+    const close = () =>{
+        setNombre("");
+        setCantidad();
+        setComerciabilidad(true);
+        setPrecio();
+        handleClose();
+    }
     return (
         <Modal 
             open={show}

@@ -5,7 +5,7 @@ import { collection, doc, getDocs, query, updateDoc, where } from "firebase/fire
 import { firestore } from "../../config/firebase";
 import { useState } from "react";
 import { FormCrearHab } from "../../components/Administrador/Habitacion/FormCrearHab";
-import { MostrarHabs } from "../../components/Administrador/Habitacion/MostrarHabs";
+import { MostrarHabs } from "../../components/MostrarHabs";
 import { FormEliminar } from "../../components/Administrador/Habitacion/FormEliminar";
 import { Retroceder } from "../../components/Retroceder";
 export const Habitaciones = () => {

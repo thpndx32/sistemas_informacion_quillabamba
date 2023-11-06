@@ -15,10 +15,6 @@ export const Filtros = () => {
                 <TuneIcon/>
             </IconButton>
             {form&&<FormFiltros show={form} handleClose={handleClose}/>}
-            <div>
-                logo filtro
-            </div>
-            Filtros
         </div>
     );
 }

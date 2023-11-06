@@ -22,7 +22,7 @@ export const FormCrearHab= (
 ) => { 
     const [numHab, setNumHab] = useState("");
     const [tipo, setTipo] = useState("");
-    const [precio, setPrecio] = useState("");
+    const [precio, setPrecio] = useState();
     const q = query(collection(firestore,"habitaciones"),where("Numero_Habitacion","==",numHab));
     const [data, loadingData, errData] = useCollection(q);
     const [actividad, setActividad] = useState(false);
@@ -35,6 +35,7 @@ export const FormCrearHab= (
                 Numero_Habitacion: numHab,
                 tipo: tipo,
                 precio: precio,
+                estado: "Disponible",
                 activa: true,
                 fichas: [],
             });
@@ -59,7 +60,9 @@ export const FormCrearHab= (
                 Numero_Habitacion: numHab,
                 tipo: tipo,
                 precio: precio,
+                estado: "Disponible",
                 activa: true,
+                fichas: [],
             });
             console.log("documento", docuRef.id);
             setErrActividad(false);
@@ -83,7 +86,7 @@ export const FormCrearHab= (
                 </Typography>
                 <input placeholder="numero habitacion" type="text" onChange={(e)=>setNumHab(e.target.value)}></input>
                 <Dropdownlist updateData={setTipo} arrData={habitaciones}></Dropdownlist>
-                <input placeholder="precio" type="text" onChange={(e)=>setPrecio(e.target.value)}></input>
+                <input placeholder="precio" type="number" onChange={(e)=>setPrecio(parseFloat(e.target.value))}></input>
                 <Button onClick={createHab}>
                     registrar habitacion
                 </Button>
