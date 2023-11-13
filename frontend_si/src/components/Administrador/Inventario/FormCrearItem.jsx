@@ -40,9 +40,10 @@ export const FormCrearItem= (
     }
     const createItem = async() =>{
         if(data.docs.length===0){
-            const docRef = doc(collection(firestore,path), nombre);
+            const docRef = doc(collection(firestore,path));
 
             await setDoc(docRef,{
+                Nombre: nombre,
                 Cantidad: cantidad,
                 Comerciabilidad: comerciabilidad,
                 Precio: precio,
@@ -65,9 +66,10 @@ export const FormCrearItem= (
                 setActividad(false);
                 return;
             }
-            const docRef = doc(collection(firestore,path), nombre);
+            const docRef = doc(collection(firestore,path));
 
             await setDoc(docRef,{
+                Nombre: nombre,
                 Cantidad: cantidad,
                 Comerciabilidad: comerciabilidad,
                 Precio: precio,
@@ -88,7 +90,7 @@ export const FormCrearItem= (
     return (
         <Modal 
             open={show}
-            onClose={handleClose}
+            onClose={close}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >

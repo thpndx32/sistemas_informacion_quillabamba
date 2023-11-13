@@ -60,7 +60,7 @@ export const ItemsFila = (
             {
                 !modificar?(
                     <div>
-                    {e.id}
+                    {e.data()?.Nombre}
                     {e.data()?.Cantidad} 
                     <IconButton onClick={handleMinus} disabled={precio===0}>
                         <RemoveIcon/>
@@ -77,11 +77,12 @@ export const ItemsFila = (
                     </div>
                 ):(
                     <div>
+                        {e.data()?.Nombre}
                         <input value={cantidad} type="number" onChange={(event)=>{
-                            setCantidad(event.target.value);
+                            setCantidad(parseInt(event.target.value));
                         }}/>
                         <input value={precio} type="number" onChange={(event)=>{
-                            setPrecio(event.target.value);
+                            setPrecio(parseFloat(event.target.value));
                         }}/>
                         <Switch checked={comerciabilidad} onChange={()=>setComerciabilidad(!comerciabilidad)}
                             inputProps={{ 'aria-label': 'controlled' }}/>

@@ -51,16 +51,16 @@ export const HabitacionFila = (
         const size=e.data()?.fichas.length;
         if (size>0){
             const lastEl=e.data()?.fichas[size-1];
-            console.log('last Element',lastEl);
+            //console.log('last Element',lastEl);
             const docRef = doc(firestore,'fichas',lastEl);
             let estado;
             getDoc(docRef).then((doc)=>{
                 estado=doc.data()?.Activo;
                 if (estado) {
                     setIdFicha(doc);
-                    console.log('docRef',docRef);
+                    //console.log('docRef',docRef);
                 }
-                console.log('estado',estado);
+                //console.log('estado',estado);
             });
         }
     },[e.data()?.fichas.length])

@@ -15,7 +15,7 @@ const style = {
 export const Ficha = ({
     show, handleClose, idFicha
 }) => {
-    console.log("id ficha", idFicha);
+    //console.log("id ficha", idFicha);
     const arrHuespedes = idFicha.data()?.Huespedes;
     return (<Modal 
         open={show}
@@ -27,11 +27,13 @@ export const Ficha = ({
             <Typography id="modal-modal-title" variant="h6" component="h2">
             Ficha
             </Typography>
-            {idFicha.data().Huespedes.map((row)=>{
+            {idFicha.data().Huespedes.map((row,index)=>{
                 return (
-                <>
-                    {row?.nombre}{row?.telefono}{row?.dni}
-                </>
+                <div key={index}>
+                    {row?.nombre}
+                    {row?.telefono}
+                    {row?.dni}
+                </div>
                 )
             })}
             <div>
