@@ -88,9 +88,9 @@ export const HabitacionFila = (
         }
     },[estate]);
     useEffect(()=>{
-        setHabitacion(e.data()?.Numero_Habitacion);
+        setHabitacion(parseInt(e.data()?.Numero_Habitacion));
         setTipo(e.data()?.tipo);
-        setPrecio(e.data()?.precio);
+        setPrecio(parseFloat(e.data()?.precio));
     },[modificar]);
     const handleColor = (
         estado

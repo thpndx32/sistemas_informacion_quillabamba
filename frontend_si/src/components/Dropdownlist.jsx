@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCollection, useCollectionData } from "react-firebase-hooks/firestore";
 import { firestore } from "../config/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
 
 export const Dropdownlist = (
     {updateData,q,arrData,defaultValue, val, content},

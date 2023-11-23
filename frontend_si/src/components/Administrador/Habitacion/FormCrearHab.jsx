@@ -22,11 +22,12 @@ export const FormCrearHab= (
 ) => { 
     const [numHab, setNumHab] = useState("");
     const [tipo, setTipo] = useState("");
-    const [precio, setPrecio] = useState();
+    const [precio, setPrecio] = useState("");
     const q = query(collection(firestore,"habitaciones"),where("Numero_Habitacion","==",numHab));
     const [data, loadingData, errData] = useCollection(q);
     const [actividad, setActividad] = useState(false);
     const [errActividad, setErrActividad] = useState(false);
+    const [error, setError] = useState(false);
     
     const createHab = async() =>{
         console.log("data",data.docs);
@@ -69,6 +70,31 @@ export const FormCrearHab= (
             handleClose();
         }
     }
+    const handleVerification = () =>{
+        if(numHab.length<3||tipo===""||!precio){
+            setError(true);
+            console.log("here");
+            return true;
+        }else{
+            setError(false);
+            console.log("false");
+            return false;
+        }
+    }
+    
+    const handleInputNumHabitacion = (e) =>{
+        const value = e.target.value;
+        if (/^\d{0,3}$/.test(value)) {
+            setNumHab(parseInt(value));
+          }
+    }
+    const handleInputPrecio = (e) =>{
+        const value = e.target.value;
+        if (/^\d*(\.\d{0,2})?$/.test(value)) {
+            setPrecio(parseFloat(value));
+          }
+    }
+
 
     return (
         <Modal 
@@ -84,10 +110,21 @@ export const FormCrearHab= (
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Llene los siguientes datos para registrar una habitacion.
                 </Typography>
-                <input placeholder="numero habitacion" type="text" onChange={(e)=>setNumHab(e.target.value)}></input>
-                <Dropdownlist updateData={setTipo} arrData={habitaciones}></Dropdownlist>
-                <input placeholder="precio" type="number" onChange={(e)=>setPrecio(parseFloat(e.target.value))}></input>
-                <Button onClick={createHab}>
+                <div>
+                <input placeholder="numero habitacion" type="text" value={numHab} onChange={handleInputNumHabitacion}></input>
+                {error&&<p>debe tener tres digitos</p>}
+                </div>
+                <div>
+                    <Dropdownlist updateData={setTipo} arrData={habitaciones}></Dropdownlist>
+                    {error&&<p>debes de escoger una alternativa</p>}
+                </div>
+                <div>
+                    <input placeholder="precio" type="number" value={precio} onChange={handleInputPrecio}></input>
+                    {error&&<p>debes usar un valor mayor a S/.0.00</p>}
+                </div>
+                <Button onClick={()=>{
+                    if(!handleVerification()) createHab();
+                    }}>
                     registrar habitacion
                 </Button>
                 {errActividad&&<p> El numero de habitacion ya esta en uso</p>}

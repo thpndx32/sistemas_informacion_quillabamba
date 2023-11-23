@@ -39,45 +39,37 @@ export const FormCrearItem= (
         }
     }
     const createItem = async() =>{
-        if(data.docs.length===0){
+        const arrayPalabras = nombre.split(" ");
+        let document = {
+            Nombre: nombre,
+            Cantidad: cantidad,
+            Comerciabilidad: comerciabilidad,
+            activa: true,
+        };
+        for (let i=1; i<=arrayPalabras.length-1; i++){
+            document={...document, [`Nombre${i}`]:arrayPalabras[i]};
+        }
+        if(data.docs.length===0||
+            data.docs.map((e)=>{
+                let same = true;
+                same = same || nombre === e.data().Nombre;
+                return (same);
+            }).every(element => element===false)){
             const docRef = doc(collection(firestore,path));
-
-            await setDoc(docRef,{
-                Nombre: nombre,
-                Cantidad: cantidad,
-                Comerciabilidad: comerciabilidad,
-                Precio: precio,
-                activa: true,
-            });
+            if(comerciabilidad){
+                document={...document, Precio:precio}
+                await setDoc(docRef,document);
+            }
+            else{
+                document={...document, Precio:0}
+                await setDoc(docRef,document);
+            }
             console.log("documento", docRef.id);
             setErrActividad(false);
             handleClose();
         } else{
-            for (const e of data.docs){
-                console.log(e.data());
-                if(e.data()?.activa){
-                    setActividad(true);
-                    setErrActividad(true);
-                    console.log("no realizado");
-                    return;
-                } 
-            }
-            if(actividad){
-                setActividad(false);
-                return;
-            }
-            const docRef = doc(collection(firestore,path));
-
-            await setDoc(docRef,{
-                Nombre: nombre,
-                Cantidad: cantidad,
-                Comerciabilidad: comerciabilidad,
-                Precio: precio,
-                activa: true,
-            });
-            console.log("documento", docRef.id);
-            setErrActividad(false);
-            handleClose();
+            setErrActividad(true);
+            console.log("no realizado");
         }
     }
     const close = () =>{

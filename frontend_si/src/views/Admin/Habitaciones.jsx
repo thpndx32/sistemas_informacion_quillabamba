@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@mui/material"
+import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select } from "@mui/material"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
 import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
@@ -8,14 +8,17 @@ import { FormCrearHab } from "../../components/Administrador/Habitacion/FormCrea
 import { MostrarHabs } from "../../components/MostrarHabs";
 import { FormEliminar } from "../../components/Administrador/Habitacion/FormEliminar";
 import { Retroceder } from "../../components/Retroceder";
+import { Filtros } from "../../components/Recepcionista/Filtros";
+export const habitaciones = ["triple","doble","matrimonial","simple", "matrimonial con adicional","matrimonial con doble adicional", "queen", "cuadruple"];
 export const Habitaciones = () => {
     const path = "habitaciones";
-    const habitaciones = ["triple","doble","matrimonial","simple", "matrimonial con adicional", "queen", "cuadruple"];
     const [form, setForm] = useState(false);
     const [eliminar, setEliminar] = useState(false);
     const [confimar, setConfirmar] = useState(false);
     const [deleteToggle,setDeleteToggle] = useState([]);
     const q = query(collection(firestore,path),where("activa","==",true));
+    const [filteredQuery, setFilteredQuery] = useState([]);
+    const [initialQuery, setInitialQuery] = useState(true);
     
     const handleCloseF = () => {setForm(false)};
     const handleCloseE = () => {
@@ -78,16 +81,18 @@ export const Habitaciones = () => {
                     </div>
                 }
             </div>
-            
-            <MostrarHabs 
-            q={q} eliminar={eliminar} deleteToggle={deleteToggle}
-             setDeleteToggle={setDeleteToggle} habitaciones={habitaciones}/>
+            <div>
+                Filtrar segun
+                <Filtros setFilteredQuery={setFilteredQuery} q={q} path={path} initialQuery={initialQuery} setInitialQuery={setInitialQuery}/>
+            </div>
+            <MostrarHabs q={filteredQuery} eliminar={eliminar} deleteToggle={deleteToggle}
+             setDeleteToggle={setDeleteToggle} habitaciones={habitaciones} initialQuery={initialQuery}/>
             <FormEliminar
              show={confimar} handleClose={handleCloseE}
               sinConfirmar={handleNoConfirmar}/>
-            <FormCrearHab
+            {form&&<FormCrearHab
              show={form} handleClose={handleCloseF}
-              habitaciones={habitaciones}/>
+              habitaciones={habitaciones}/>}
         </div>
     )
 }

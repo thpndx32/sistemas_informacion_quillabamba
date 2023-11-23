@@ -31,15 +31,15 @@ export const ItemsFila = (
     }
     const handleAdd = async () =>{
         await updateDoc(e.ref,{
-            Precio: precio+1,
+            Cantidad: cantidad+1,
         });
-        setPrecio(precio+1);
+        setCantidad(cantidad+1);
     }
     const handleMinus = async () =>{
         await updateDoc(e.ref,{
-            Precio: precio-1,
+            Cantidad: cantidad-1,
         });
-        setPrecio(precio-1);
+        setCantidad(cantidad-1);
     }
     //console.log("delArray",index,deleteArray);
     useEffect(()=>{
@@ -61,14 +61,14 @@ export const ItemsFila = (
                 !modificar?(
                     <div>
                     {e.data()?.Nombre}
-                    {e.data()?.Cantidad} 
-                    <IconButton onClick={handleMinus} disabled={precio===0}>
+                    <IconButton onClick={handleMinus} disabled={cantidad===0}>
                         <RemoveIcon/>
                     </IconButton>
-                    {e.data()?.Precio}
+                    {e.data()?.Cantidad} 
                     <IconButton onClick={handleAdd}>
                         <AddIcon/>
                     </IconButton>
+                    {e.data()?.Precio}
                     {e.data()?.Comerciabilidad?<>Comerciable</>:<>No comerciable</>}
                     {eliminar&&<ImageToggle handleState={setState} index={index}/>}
                     <IconButton onClick={handleModificar}>

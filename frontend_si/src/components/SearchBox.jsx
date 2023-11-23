@@ -1,18 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../config/firebase';
 import { and, collection, limit, query, where } from 'firebase/firestore';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection, useCollectionData } from 'react-firebase-hooks/firestore';
 import { SearchComponent } from './SearchComponent';
 import { FilaPI } from './Recepcionista/FilaPI';
 
 export const SearchBox = (
     {Collection,atributo, ficha, handleOrders, Orders}
 ) => {
+    console.log("atributo",atributo);
     const [searchTerm, setSearchTerm] = useState("");
-    const q = query(collection(firestore,Collection),
-    where(atributo, '>=', searchTerm),where(atributo, '<=', searchTerm + '\uf8ff'),
-    limit(20));
-    const [data, loadingData, errData ] = useCollection(q);
+    const collectionRef = collection(firestore,Collection);
+    const q = query(collectionRef,
+    where(atributo, "<=", searchTerm + '\uf8ff'),where(atributo, ">=", searchTerm),where("Comerciabilidad", "==", true),
+    limit(10));
+    const q1 = query(collectionRef,
+    where(atributo+"1", '>=', searchTerm),where(atributo+"1", '<=', searchTerm + '\uf8ff'),where("Comerciabilidad", "==", true),
+    limit(10));
+    const q2 = query(collectionRef,
+    where(atributo+"2", '>=', searchTerm),where(atributo+"2", '<=', searchTerm + '\uf8ff'),where("Comerciabilidad", "==", true),
+    limit(10));
+    const [data0, loadingData0] =useCollection(q);
+    const [data1, loadingData1] =useCollection(q1);
+    const [data2, loadingData2] =useCollection(q2);
+    const union = (...arrays) => {
+        return [...new Set(arrays.flat())];
+    };
+    const [collectedData, setCollectedData] = useState([]);
+    useEffect(()=>{
+        console.log("data0",data0)
+        console.log("data1",data1)
+        console.log("data2",data2)
+        setCollectedData(union(data0?.docs||[],data1?.docs||[],data2?.docs||[]))
+        console.log("collected Data",collectedData);
+    },[loadingData0,loadingData1,loadingData2]);
     const [ordersLenght, setOrdersLenght] = useState(Orders.length);
     const [cambio, setCambio] = useState(true);
     useEffect(()=>{
@@ -62,11 +83,12 @@ export const SearchBox = (
   return (
     <div>
       <SearchComponent onSearch={handleSearch} />
-      {loadingData ? <p>Cargando...</p>
-      :(<>
-        {data?.docs.map((doc,index)=>{
+      {(loadingData0 && loadingData1 && loadingData2)? <p>Cargando...</p>
+      : searchTerm!==""&&(<>
+        {collectedData.map((doc,index)=>{
+            console.log("doc",doc);
             return (
-                <FilaPI key={index} doc={doc} ficha={ficha} addOrder={addOrder} 
+                <FilaPI key={index} doc={doc} ficha={ficha} addOrder={addOrder} Orders={Orders} 
                 OrdersLength={ordersLenght} cambio={cambio} checkOrder={checkOrder}/>
             )
         })}

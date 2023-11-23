@@ -48,7 +48,7 @@ export const HuespedForm = (
     };
     useEffect(() => {
         if(tipoHab==="simple")setAuxArray(Array(1).fill(0));
-        else if (tipoHab==="cuadruple") setAuxArray(Array(4).fill(0));
+        else if (tipoHab==="cuadruple"||tipoHab==="matrimonial con doble adicional") setAuxArray(Array(4).fill(0));
         else if (tipoHab==="triple"||tipoHab==="matrimonial con adicional") setAuxArray(Array(3).fill(0));
         else setAuxArray( Array(2).fill(0));
     },[tipoHab])

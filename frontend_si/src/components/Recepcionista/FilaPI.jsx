@@ -2,8 +2,9 @@ import { useEffect, useState } from "react"
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { IconButton } from "@mui/material";
 import { updateDoc } from "firebase/firestore";
+import { firestore } from "../../config/firebase";
 export const FilaPI = ({
-    doc, ficha, addOrder, OrdersLength, checkOrder, cambio
+    doc, ficha, addOrder, OrdersLength, Orders, checkOrder, cambio
 })=>{
     const [cantidad,setCantidad] = useState(0);
     const [stockCantidad, setStockCantidad] = useState(doc.data()?.Cantidad);
@@ -15,6 +16,13 @@ export const FilaPI = ({
             setCantidad(val);
         }
     };
+    for (let i = 0; i < Orders.length; i++) {
+        if (doc.data().Nombre === Orders[i][0].data().Nombre&&indexOrder===-1){
+            setStockCantidad(stockCantidad-Orders[i][1]);
+            setIndexOrder(i);
+            break;
+        } 
+    }
     useEffect(()=>{
         console.log("indexOrder",indexOrder);
     },[indexOrder])
@@ -35,8 +43,13 @@ export const FilaPI = ({
     },[OrdersLength])
     const handlePedir = async () => {
         if(ficha){
+            const object = {};
+            object[doc.data()?.Nombre] = {Cantidad: cantidad, Costo: doc.data()?.Precio*cantidad};
+            await updateDoc(ficha.ref,{
+                Contenido: object
+            });
             await updateDoc(doc.ref,{
-                Cantidad: doc.data()?.Cantidad-cantidad
+                Cantidad: stockCantidad
             });
             //console.log(stockCantidad-cantidad);
             setStockCantidad(stockCantidad-cantidad);
