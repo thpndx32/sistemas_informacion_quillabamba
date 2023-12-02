@@ -1,14 +1,12 @@
-import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select } from "@mui/material"
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from "react-router-dom";
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { Button} from "@mui/material"
+import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firestore } from "../../config/firebase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormCrearHab } from "../../components/Administrador/Habitacion/FormCrearHab";
 import { MostrarHabs } from "../../components/MostrarHabs";
 import { FormEliminar } from "../../components/Administrador/Habitacion/FormEliminar";
 import { Retroceder } from "../../components/Retroceder";
-import { Filtros } from "../../components/Recepcionista/Filtros";
+import { Filtros } from "../../components/Filtros/Filtros";
 export const habitaciones = ["triple","doble","matrimonial","simple", "matrimonial con adicional","matrimonial con doble adicional", "queen", "cuadruple"];
 export const Habitaciones = () => {
     const path = "habitaciones";
@@ -19,7 +17,15 @@ export const Habitaciones = () => {
     const q = query(collection(firestore,path),where("activa","==",true));
     const [filteredQuery, setFilteredQuery] = useState([]);
     const [initialQuery, setInitialQuery] = useState(true);
-    
+    useEffect (()=>{
+        //console.log("USE EFFECT");
+        //console.log(JSON.stringify(filteredQuery[0]));
+        //console.log(JSON.stringify(q));
+        if(JSON.stringify(filteredQuery[0]) === JSON.stringify(q)){
+            //console.log("USE EFFECT");
+            setInitialQuery(true);
+        }
+    },[filteredQuery,q])
     const handleCloseF = () => {setForm(false)};
     const handleCloseE = () => {
         console.log("deleteToggle", deleteToggle);
@@ -49,12 +55,6 @@ export const Habitaciones = () => {
         .catch((error) => {
             console.error('Error al obtener documentos:', error);
         });
-            deleteToggle.map((e,index)=>{
-                if(e===true){
-                    console.log(index, e);
-
-                }
-        })
         setEliminar(false); 
         setConfirmar(false);
     };

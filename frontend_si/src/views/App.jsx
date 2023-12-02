@@ -10,7 +10,9 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, query, where } from 'firebase/firestore';
 import { Navigate, redirect } from 'react-router-dom';
 
-function App() {
+function App({
+  setCajaRef
+}) {
   const [state, setState] = useState(false);
   const negateState = () =>{
     setState(!state);
@@ -24,8 +26,8 @@ function App() {
         snapshotListenOptions: { includeMetadataChanges: true },
       }
   );
-  if(value) {value.docs.map((doc)=>(console.log("valor",doc.get('correo'))));}
-  console.log("valor_val",value);
+  //if(value) {value.docs.map((doc)=>(console.log("valor",doc.get('correo'))));}
+  //console.log("valor_val",value);
   return (
     <div className="App">
       <header className="App-header">
@@ -54,7 +56,7 @@ function App() {
             </button>
           )
           :
-          <LoginBox auth={auth} state={state}></LoginBox>
+          <LoginBox auth={auth} state={state} setCajaRef={setCajaRef}></LoginBox>
         }
       </header>
     </div>

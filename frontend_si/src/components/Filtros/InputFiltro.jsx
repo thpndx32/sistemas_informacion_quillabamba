@@ -14,15 +14,17 @@ export const InputFiltro = ({
     useEffect(()=>{
         const index = nombresOperaciones.indexOf(nombreOperacion);
         if(Operacion!==operaciones[index])setOperacion(operaciones[index]);
-        console.log(operaciones[index]);
+        //console.log(operaciones[index]);
     },[nombreOperacion])
     useEffect(()=>{
-        if(Filtro==="Tipo"||Filtro==="Estado"){
+        if(Filtro==="tipo"||Filtro==="estado"){
             setNombreOperacion(nombresOperaciones[0]);
             setOperacion(operaciones[0]);
+            setValorFiltro("");
         } else {
             setNombreOperacion(nombresOperaciones[2]);
             setOperacion(operaciones[2]);
+            setValorFiltro(0);
         }
     },[Filtro])
     return (

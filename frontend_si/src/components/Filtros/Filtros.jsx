@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import TuneIcon from '@mui/icons-material/Tune';
-import { Box, FormControl, IconButton, InputLabel, MenuItem, Select } from "@mui/material";
-import { FormFiltros } from "./FormFiltros";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { collection, query, where } from "firebase/firestore";
 import { firestore } from "../../config/firebase";
-import { InputFiltro } from "../Filtros/InputFiltro";
+import { InputFiltro } from "./InputFiltro";
+import { FiltrosFila } from "./FiltrosFila";
 
 
 
@@ -14,45 +13,67 @@ export const Filtros = ({
     const [filtro, setFiltro] = useState("");
     const [sizeFilters, setSizeFilters] = useState(0);
     const [filters, setFilters] = useState([]);
-    const [copyFilters, setCopyFilters] = useState([...filters]);
     const [filteredQueries, setFilteredQueries] = useState([]);
     const [operacionComparacion, setOperacionComparacion] = useState("==");
     const [valorFiltro, setValorFiltro] =useState("");
+    const [indexMod, setIndexMod] = useState(-1);
+    const [erasedIndex, setErasedIndex] = useState(-1);
+    const handleBorrar = (index) => {
+        let copyFilters = filters;
+        //console.log("index",index);
+        copyFilters.splice(index,1);
+        //console.log("copyFilters",copyFilters);
+        setErasedIndex(index);
+        setFilters([...copyFilters]);
+    }
     useEffect(()=>{
         if(filters.length>0){
+            //console.log("not q");
             setFilteredQuery(filteredQueries);
             if (initialQuery) setInitialQuery(false);
         }else {
+            //console.log("q");
             setFilteredQuery([q]);
         }
-    },[filteredQueries])
+    },[filteredQueries,filters.length,initialQuery,q,setFilteredQuery,setInitialQuery])
     useEffect(()=>{
-        console.log("filtros",filters);
-        const erasedIndex= filters.findIndex((element,index)=>JSON.stringify(element)!==JSON.stringify(copyFilters[index]));
+        //console.log("filtros",filters);
         if (filters.length !== sizeFilters){
+            //console.log(filters.length);
             setSizeFilters(filters.length);
-            setCopyFilters(filters);
         }
-        console.log("here before set Queries");
+        //console.log("here before set Queries");
         if(filters.length > sizeFilters) {
+            //console.log("HERE >");
             const lastIndex = filters.length - 1;
             const filteredQ = query(collection(firestore,path),
             where("activa","==", true), where(filters[lastIndex].field,filters[lastIndex].operacion, filters[lastIndex].value))
             setFilteredQueries([...filteredQueries,filteredQ]);
-        } else {
+        }else if(filters.length === sizeFilters && !initialQuery){
+            //console.log("HERE ==");
             let localCopyArray = filteredQueries;
+            const filteredQ = query(collection(firestore,path),
+            where("activa","==", true), where(filters[indexMod]?.field,filters[indexMod]?.operacion, filters[indexMod]?.value))
+            localCopyArray[indexMod] = filteredQ;
+            setFilteredQueries([...localCopyArray]);
+        }else {
+            //console.log("HERE <");
+            let localCopyArray = filteredQueries;
+            //console.log("local copy Array before", localCopyArray)
             localCopyArray.splice(erasedIndex, 1);
+            //console.log("local copy Array after", localCopyArray)
             setFilteredQueries([...localCopyArray]);
         }
-    },[filters])
+    },[filters,erasedIndex,filteredQueries,indexMod,initialQuery,path,sizeFilters])
     const handleAddFiltro = ( value) => {
         const filterIndex = filters.findIndex(filter => 
             filter.field === filtro
         );
         if (filterIndex !== -1) {
-            const updatedFilters = [...filters];
+            let updatedFilters = [...filters];
             updatedFilters[filterIndex].value = value;
             setFilters([...updatedFilters]);
+            setIndexMod(filterIndex);
         } else {
             const objeto = { field:filtro, value:value, operacion:operacionComparacion };
             setFilters([...filters, objeto]);
@@ -88,11 +109,7 @@ export const Filtros = ({
                     {
                         filters.map((filtro,index)=>{
                             return (
-                                <p key={index}>
-                                    {filtro.field}
-                                    {filtro.operacion}
-                                    {filtro.value}
-                                </p>
+                                <FiltrosFila filtro={filtro} index={index} handleBorrar={handleBorrar}/>
                             )
                         })
                     }

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { FilaPedido } from "./FilaPedido";
 import { Button } from "@mui/material";
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../config/firebase";
 
 export const Pedidos = ({
     orders, eliminarElemento, handleClose, nombre, DNI
 }) =>{
     const [total, setTotal] = useState(0);
+    const cajaId = sessionStorage.getItem('cajaRef');
+    const cajaRef = doc(firestore,'caja',cajaId);
     useEffect(()=>{
         let totalLocal=0;
         orders.forEach(element => {
@@ -42,6 +44,15 @@ export const Pedidos = ({
             DNI: DNI,
             Contenido: myObject,
             Total: total,
+            Fecha: serverTimestamp(),
+        })
+        let productos = [];
+        await getDoc(cajaRef).then((doc)=>{
+            productos = doc.data().productos;
+            productos.push(reciboRef.id);
+        })
+        await updateDoc(cajaRef,{
+            productos: productos,
         })
         handleClose();
       }

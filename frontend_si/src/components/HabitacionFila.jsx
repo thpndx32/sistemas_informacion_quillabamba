@@ -19,7 +19,7 @@ import { Ficha } from "./Fichas/Ficha";
 export const HabitacionFila = (
     {e,index,handleDelete,deleteArray,eliminar, habitaciones, estados}
 ) => {
-    const [usr,dataUsr, loadingDataUsr] = useContext(AuthContext);
+    const [usr ,dataUsr, loadingDataUsr] = useContext(AuthContext);
     const colores = ["green","red","orange","gray"];
     const [estate, setState] = useState(false);
     const [modificar, setModificar] = useState(false);
@@ -46,10 +46,11 @@ export const HabitacionFila = (
             setEnUsoHab(true);
             setUsoHab(false);
         }
-    },[estadoHab])
+    },[estadoHab,estados])
     useEffect(()=>{
         const size=e.data()?.fichas.length;
         if (size>0){
+            console.log("here");
             const lastEl=e.data()?.fichas[size-1];
             //console.log('last Element',lastEl);
             const docRef = doc(firestore,'fichas',lastEl);
@@ -86,12 +87,12 @@ export const HabitacionFila = (
         handleDelete([...newArray]);
         //console.log(index, deleteArray[index])
         }
-    },[estate]);
+    },[estate,deleteArray,handleDelete,index]);
     useEffect(()=>{
         setHabitacion(parseInt(e.data()?.Numero_Habitacion));
         setTipo(e.data()?.tipo);
         setPrecio(parseFloat(e.data()?.precio));
-    },[modificar]);
+    },[modificar,e]);
     const handleColor = (
         estado
     ) => {
@@ -185,9 +186,9 @@ export const HabitacionFila = (
                     </div>
                 ))
             }
-            <HuespedForm show={clientForm} tipoHab={tipo} handleClose={handleClose}
-             numHab={e.data()?.Numero_Habitacion} handleCliente={handleCliente}/>
-             {idFicha&&<Ficha show={ficha} handleClose={handleFicha} idFicha={idFicha}/>}
+            {clientForm&&<HuespedForm show={clientForm} tipoHab={tipo} handleClose={handleClose}
+             numHab={e.data()?.Numero_Habitacion} precio={e.data()?.precio} handleCliente={handleCliente}/>}
+             {idFicha&&ficha&&<Ficha show={ficha} handleClose={handleFicha} idFicha={idFicha}/>}
         </div>
     )
 }

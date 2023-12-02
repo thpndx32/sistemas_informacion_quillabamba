@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { IconButton } from "@mui/material";
 import { updateDoc } from "firebase/firestore";
-import { firestore } from "../../config/firebase";
 export const FilaPI = ({
     doc, ficha, addOrder, OrdersLength, Orders, checkOrder, cambio
 })=>{
@@ -40,11 +39,23 @@ export const FilaPI = ({
                 }
             }
         }
-    },[OrdersLength])
+    },[OrdersLength,cambio,checkOrder,doc,indexOrder])
     const handlePedir = async () => {
         if(ficha){
-            const object = {};
-            object[doc.data()?.Nombre] = {Cantidad: cantidad, Costo: doc.data()?.Precio*cantidad};
+            const object = ficha.data().Contenido;
+            if(object[doc.data()?.Nombre]){
+                object[doc.data()?.Nombre] = {
+                    Cantidad: cantidad+object[doc.data()?.Nombre].Cantidad,
+                    Costo: doc.data()?.Precio*cantidad+object[doc.data()?.Nombre].Costo,
+                    Recibo: '',
+                };
+            }else{
+                object[doc.data()?.Nombre] = {
+                    Cantidad: cantidad,
+                    Costo: doc.data()?.Precio*cantidad,
+                    Recibo: '',
+                };
+            }
             await updateDoc(ficha.ref,{
                 Contenido: object
             });

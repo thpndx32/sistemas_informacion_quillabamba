@@ -17,9 +17,17 @@ const style = {
     p: 4,
 };
 
+function formatDate(date) {
+console.log("here",date);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+
+  return `${day} ${month} ${year}`;
+}
 
 export const HuespedForm = (
-    {show,handleClose,tipoHab,numHab, handleCliente}
+    {show,handleClose,tipoHab,numHab, handleCliente, precio}
 ) =>{
     const [auxArray,setAuxArray] = useState([]);
     const [formData, setFormData] = useState([]);
@@ -33,7 +41,7 @@ export const HuespedForm = (
         //console.log(fechasjs);
         let newArr = [];
         fechasjs.forEach((e,index)=>{
-            newArr[index] = e.toDate();
+            newArr[index] = e;
         })
         //console.log(newArr);
         setFechas(newArr);
@@ -56,14 +64,25 @@ export const HuespedForm = (
         const validRows = formData.filter((data) => data.nombre && data.dni && data.dni.length === 8);
         // Ahora, verifica que al menos una fila esté completamente llena
         const completeRows = formData.filter((data) => data.telefono);
+        console.log("fechas 0",fechas[0].add(1,'day'));
+        const daysDifference = Math.ceil((fechas[1] - fechas[0]) / (1000 * 60 * 60 * 24)+1);
+        const daysToPay = {};
+        for (let i = 0; i < daysDifference; i++) {
+            daysToPay[formatDate(fechas[0].add(i,'day').$d)]={
+                Cantidad: 1,
+                Costo: precio,
+                Recibo: '',
+            };
+        }
         if (completeRows.length > 0) {
             //console.log("Se ha llenado al menos una fila completamente.");
             const docuRef = await addDoc(collection(firestore,'fichas'),{
                 Huespedes: validRows,
                 Numero_Habitacion: numHab,
-                Inicio_Estadia: fechas[0],
-                Final_Estadia: [fechas[1]],
+                Inicio_Estadia: fechas[0].toDate(),
+                Final_Estadia: [fechas[1].toDate()],
                 Activo: true,
+                Contenido: daysToPay,
             });
             handleCliente(docuRef.id);
             //console.log("ficha", docuRef.id);

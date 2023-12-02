@@ -12,12 +12,15 @@ export const estadosHabitaciones = ["Disponible","Ocupado","Limpieza","No dispon
 
 const useControlQueries = (q, initialQuery) =>{
     const [arrQueries, setArrQueries] = useState([]);
+    //console.log("Mostrar q", q);
+    //console.log("enters the control queries");
     //console.log("arrQueries before",arrQueries);
     const [loading, setLoading] = useState(false);
     const [lastQuery, setLastQuery] = useState(true);
     const [interseccion, setInterseccion] = useState([]);
     useEffect(()=>{
         setLoading(true);
+        //console.log("enters here");
         q.forEach((quer,index)=>{
             //console.log("quer",quer);
             const unsubscribe = onSnapshot(quer,(snapshot)=>{
@@ -28,14 +31,17 @@ const useControlQueries = (q, initialQuery) =>{
                     if (lastQuery===true){
                         copyQueries = [];
                     } else{
-                        copyQueries = arrQueries;
+                        //console.log("arrQueries", arrQueries);
+                        if (arrQueries.length>=q.length){
+                            copyQueries = [];
+                        } else copyQueries = arrQueries;
                     }
                 }
                 if(index>=copyQueries.length){
                     copyQueries.push(snapshot.docs);
                     //console.log("copyQueries",copyQueries);
                 }
-                console.log(`snapshot ${index}`, snapshot.docs);
+                //console.log(`snapshot ${index}`, snapshot.docs);
                 setLastQuery(initialQuery);
                 setArrQueries([...copyQueries]);
             })
@@ -49,15 +55,14 @@ const useControlQueries = (q, initialQuery) =>{
         //console.log("arrQueries", arrQueries.length);
         //console.log("intersecta", intersecta);
         if(interseccion!==intersecta) setInterseccion(intersecta);
-    },[arrQueries[0],q,loading,arrQueries.length])
-    console.log("queries",q);
+    },[arrQueries[0],loading,arrQueries.length,lastQuery])
+    //console.log("queries",q);
     return [interseccion, loading];
 }
 
 export const MostrarHabs = (
     {q, eliminar, deleteToggle, setDeleteToggle, habitaciones, initialQuery}
 ) => {
-    console.log("Mostrar q", q);
     const [data, loadingData] = useControlQueries(q, initialQuery);
     //console.log("Mostrar data", data);
     //console.log("Mostrar data", data?.length);
