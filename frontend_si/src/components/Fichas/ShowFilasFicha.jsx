@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FilaFicha } from "./FilaFicha";
 
 export const ShowFilasFicha = ({
-    payment,productos,setArrPay,arrPay
+    payment,productos,setArrPay,arrPay, caja=false
 }) =>{
     let laststate = true;
     let auxArr = [];
@@ -10,22 +10,22 @@ export const ShowFilasFicha = ({
 
     // Iterar a través del objeto principal
     for (const key in productos) {
-    if (productos.hasOwnProperty(key)) {
-        const subObjeto = productos[key];
+        if (productos.hasOwnProperty(key)) {
+            const subObjeto = productos[key];
 
-        // Verificar si el atributo 'valor' es igual a x
-        if (subObjeto.Recibo === '') {
-        // Agregar el subobjeto al resultado
-        resultadoObjeto[key] = subObjeto;
+            // Verificar si el atributo 'valor' es igual a x
+            if (subObjeto.Cantidad > subObjeto.Pagados) {
+            // Agregar el subobjeto al resultado
+            resultadoObjeto[key] = subObjeto;
+            }
         }
-    }
     }
     useEffect(()=>{
         console.log("arrpay useEffect",arrPay);
         console.log("productos useEffect",productos);
     },[arrPay])
     const updateAuxArr = (arr,final_one) =>{
-        console.log("UPDATE AUXARR",arr);
+        //console.log("UPDATE AUXARR",arr);
         let lengthAuxArr;
         if(laststate){
             auxArr = []
@@ -36,23 +36,28 @@ export const ShowFilasFicha = ({
         laststate = final_one;
         lengthAuxArr = auxArr.length;
         if (final_one) {
-            console.log("LAST ONE");
+            //console.log("LAST ONE");
             setArrPay(auxArr);
             auxArr=[];
         }
-        console.log("UPDATE AUXARR resultado",auxArr);
+        //console.log("UPDATE AUXARR resultado",auxArr);
         return lengthAuxArr;
     };
     const handleCheckPay = useCallback((index_Rel) => {
         let auxArrPay1 = arrPay;
-        console.log(index_Rel);
-        console.log("arrPay",arrPay);
+        //console.log(index_Rel);
+        //console.log("arrPay",arrPay);
         console.log("auxArray1 before",auxArrPay1[index_Rel]);
         auxArrPay1[index_Rel][0] = !arrPay[index_Rel][0];
         console.log("auxArray1 after",auxArrPay1);
-        //console.log("arrPayafter",arrPay);
+        console.log("arrPayafter",arrPay);
         setArrPay(auxArrPay1);
     },[auxArr])
+    const sortRecibos = (a,b) =>{
+        //console.log("a",a);
+        //console.log("b",b);
+        return a[0].localeCompare(b[0]);
+    }
     return (
         <div>
             <>
@@ -63,14 +68,15 @@ export const ShowFilasFicha = ({
             </>
             {payment
             ?
-            Object.entries(productos).map((val)=>{
-                return(<FilaFicha key={val[0]} val={val} payed={true} payment={payment}/>);
+            Object.entries(productos).sort((a,b)=>sortRecibos(a,b)).map((val)=>{
+                console.log("IDK",val);
+                return(<FilaFicha key={val[0]} val={val} payed={true} payment={payment} caja={caja}/>);
             })
             :
-            Object.entries(resultadoObjeto).map((val,index)=>{
-                //console.log("Recibo",val);
+            Object.entries(resultadoObjeto).sort((a,b)=>sortRecibos(a,b)).map((val,index)=>{
+                console.log("Recibo",val);
                 return(<FilaFicha key={val[0]} val={val} index_Abs={index} productos={resultadoObjeto}
-                     handlePay={handleCheckPay} payment={payment}
+                     handlePay={handleCheckPay} payment={payment} caja={caja}
                      arrPay={arrPay} modifyAuxArrPay={updateAuxArr} auxArrPay={auxArr}/>);
             })
             }

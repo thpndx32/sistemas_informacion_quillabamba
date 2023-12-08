@@ -3,42 +3,11 @@ import { auth, firestore } from "../../config/firebase";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { Filtros } from "../../components/Filtros/Filtros";
 import { MostrarHabs } from "../../components/MostrarHabs";
-import { Timestamp, collection, doc, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
+import {  collection, doc, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { FormProductoInd } from "../../components/Recepcionista/FormProductoInd";
-
-export const Intersection = (arrays) => {
-    
-    //console.log("arrays intersecting", arrays);
-    //console.log("arrays intersecting", arrays[0]);
-    if (!arrays || arrays.length === 0) {
-        //if (arrays.length[0])console.log("arrays HERE");
-      return [];
-    }
-    // Inicializar la intersección con el primer array
-    let interseccion = arrays[0];
-    //console.log("interseccion",interseccion);
-    let arrData = [];
-    for (let i = 1; i < arrays.length; i++) {
-        let arrDatai = [];
-        for (let j = 0; j < arrays[i].length; j++){
-            //console.log("element",arrays[i][j].data());
-            arrDatai.push(JSON.stringify(arrays[i][j].data()));
-        }
-        arrData.push(arrDatai);
-    }
-    //console.log("arrData",arrData);
-    // Iterar sobre los demás arrays
-    for (let i = 0; i < arrData.length; i++) {
-      // Filtrar los elementos que están presentes en ambos conjuntos
-      interseccion = interseccion.filter(element => arrData[i].includes(JSON.stringify(element.data())));
-      //console.log("interseccion",interseccion);
-    }
-  
-    return interseccion;
-  }
-
 export const Recepcionista = () => {
+    //console.log("Recepcionista");
     const path = "habitaciones";
     const [logOut] = useSignOut(auth);
     const q = query(collection(firestore,path),where("activa","==",true));
@@ -47,9 +16,15 @@ export const Recepcionista = () => {
     const cajaId = sessionStorage.getItem('cajaRef');
     const cajaRef = doc(firestore,'caja',cajaId);
     const [initialQuery, setInitialQuery] = useState(true);
+    const handleFilterQuery = (val)=>{
+        setFilteredQuery(val);
+    }
+    const  handleInitialQuery = (val)=>{
+        setInitialQuery(val);
+    }
     useEffect (()=>{
         if(filteredQuery===0){
-            setInitialQuery(true);
+            handleInitialQuery(true);
         }
     },[filteredQuery.length,filteredQuery])
     const handleProducto = () => {
@@ -74,10 +49,12 @@ export const Recepcionista = () => {
                     Ver Caja
                 </button>
             </Link>
-            <div>
-                Filtrar segun
-                <Filtros setFilteredQuery={setFilteredQuery} q={q} path={path} initialQuery={initialQuery} setInitialQuery={setInitialQuery}/>
-            </div>
+            {
+                <div>
+                    Filtrar segun
+                    <Filtros setFilteredQuery={handleFilterQuery} q={q} path={path} initialQuery={initialQuery} setInitialQuery={handleInitialQuery}/>
+                </div>
+            }
             <MostrarHabs q={filteredQuery} initialQuery={initialQuery}/>
             {productoIndividual&&<FormProductoInd show={productoIndividual} handleClose={()=>{setProductoIndividual(false)}}/>}
         </div>

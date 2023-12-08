@@ -43,8 +43,10 @@ export const LoginBox = (
                     recepcionista: correo,
                     productos: [],
                     fichas: {},
+                    ingresos: 0,
                 });
                 sessionStorage.setItem('cajaRef',algo.id);
+                console.log("idCaja", algo.id);
             }
         }
         console.log(usr);

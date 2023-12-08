@@ -6,8 +6,8 @@ import { useContext, useEffect, useState } from "react";
 import { HabitacionFila } from "./HabitacionFila";
 import { AuthContext } from "../views/AppQuillabamba";
 import { TrackQuery } from "./TrackQuery";
-import { Intersection } from "../views/Recepcionista/Recepcionista";
 import { Await } from "react-router-dom";
+import { Intersection } from "../util/Intersection";
 export const estadosHabitaciones = ["Disponible","Ocupado","Limpieza","No disponible"];
 
 const useControlQueries = (q, initialQuery) =>{

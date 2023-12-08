@@ -17,7 +17,7 @@ const style = {
 export const FormProductoFicha = (
     {show,handleClose, ficha}
 ) => {
-    
+    console.log("her");
     const [orders, setOrders] = useState([]);
     return (
         <Modal

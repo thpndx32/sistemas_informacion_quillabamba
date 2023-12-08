@@ -14,7 +14,7 @@ export const Caja = () => {
     const [logOut] = useSignOut(auth);
     const [toSee, setToSee] = useState(false);
     const [data, loadingData] = useDocument(cajaRef);
-    console.log("caja id",cajaId)
+    //console.log("caja id",cajaId)
     const handleCierre = async() => {
         await updateDoc(cajaRef,{
             fecha_hora_cierre: serverTimestamp(),
@@ -31,11 +31,11 @@ export const Caja = () => {
             />} label={toSee?"Fichas":"Productos Individuales"}
             />
             {!loadingData&&(!toSee?
-            data.data().productos.map((producto)=>{
-                return <ProductoCaja producto={producto}/>
+            data.data().productos.map((producto,index)=>{
+                return <ProductoCaja key={index} producto={producto}/>
             })
-            :Object.entries(data.data().fichas).map((ficha)=>{
-                return <FichaCaja ficha={ficha}/>
+            :Object.entries(data.data().fichas).map((ficha,index)=>{
+                return <FichaCaja key={index} ficha={ficha}/>
             }))}
             <button onClick={()=>handleCierre()}>
                 Cerrar caja

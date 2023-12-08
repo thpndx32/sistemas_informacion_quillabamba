@@ -39,7 +39,7 @@ export const FilaPI = ({
                 }
             }
         }
-    },[OrdersLength,cambio,checkOrder,doc,indexOrder])
+    },[OrdersLength,cambio,doc,indexOrder])
     const handlePedir = async () => {
         if(ficha){
             const object = ficha.data().Contenido;
@@ -47,22 +47,24 @@ export const FilaPI = ({
                 object[doc.data()?.Nombre] = {
                     Cantidad: cantidad+object[doc.data()?.Nombre].Cantidad,
                     Costo: doc.data()?.Precio*cantidad+object[doc.data()?.Nombre].Costo,
-                    Recibo: '',
+                    Recibo: object[doc.data()?.Nombre].Recibo,
+                    Pagados: object[doc.data()?.Nombre].Pagados
                 };
             }else{
                 object[doc.data()?.Nombre] = {
                     Cantidad: cantidad,
                     Costo: doc.data()?.Precio*cantidad,
                     Recibo: '',
+                    Pagados: 0,
                 };
             }
             await updateDoc(ficha.ref,{
                 Contenido: object
             });
             await updateDoc(doc.ref,{
-                Cantidad: stockCantidad
+                Cantidad: stockCantidad-cantidad
             });
-            //console.log(stockCantidad-cantidad);
+            console.log(stockCantidad-cantidad);
             setStockCantidad(stockCantidad-cantidad);
             setCantidad(0);
         }else{

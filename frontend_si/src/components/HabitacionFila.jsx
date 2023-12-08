@@ -32,6 +32,7 @@ export const HabitacionFila = (
     const [clientForm, setClientForm] = useState(false);
     const [ficha, setFicha] = useState(false);
     const [idFicha, setIdFicha] = useState();
+    //console.log("habitacion fila");
     useEffect(()=>{
         if(estadoHab===estados[0]) {
            setEnUsoHab(false);
@@ -50,7 +51,7 @@ export const HabitacionFila = (
     useEffect(()=>{
         const size=e.data()?.fichas.length;
         if (size>0){
-            console.log("here");
+            //console.log("here");
             const lastEl=e.data()?.fichas[size-1];
             //console.log('last Element',lastEl);
             const docRef = doc(firestore,'fichas',lastEl);

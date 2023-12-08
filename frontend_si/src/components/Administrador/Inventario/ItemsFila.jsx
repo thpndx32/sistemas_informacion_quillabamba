@@ -44,9 +44,9 @@ export const ItemsFila = (
     //console.log("delArray",index,deleteArray);
     useEffect(()=>{
         const newArray = [...deleteArray];
-        console.log("estate",estate);
+        //console.log("estate",estate);
         newArray[index] = estate;
-        console.log("newArr",index,newArray);
+        //console.log("newArr",index,newArray);
         handleDelete(newArray);
         //console.log(index, deleteArray[index])
     },[estate]);

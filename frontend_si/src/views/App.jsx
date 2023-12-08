@@ -3,7 +3,7 @@ import './App.css';
 import { LoginBox } from '../components/LoginBox';
 import { auth, firestore } from '../config/firebase';
 import { Switch } from '../components/Switch';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import { AuthContext } from './AppQuillabamba';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -18,14 +18,17 @@ function App({
     setState(!state);
   }
   const [usr] = useContext(AuthContext);
-  const [logOut, loadingLogOut, errorLogOut] = useSignOut(auth);
+  const [logOut] = useSignOut(auth);
   //console.log("USR",usr);
-  const [value, loadingValue, errValue] = useCollection(
+  const [value] = useCollection(
     query(collection(firestore, 'usuarios'),where("correo","==",`${usr?.email}`)),
     {
         snapshotListenOptions: { includeMetadataChanges: true },
       }
   );
+  useEffect(()=>{
+    sessionStorage.setItem('cajaRef','_');
+  },[])
   //if(value) {value.docs.map((doc)=>(console.log("valor",doc.get('correo'))));}
   //console.log("valor_val",value);
   return (

@@ -35,7 +35,7 @@ export const Filtros = ({
             //console.log("q");
             setFilteredQuery([q]);
         }
-    },[filteredQueries,filters.length,initialQuery,q,setFilteredQuery,setInitialQuery])
+    },[filters.length,initialQuery])
     useEffect(()=>{
         //console.log("filtros",filters);
         if (filters.length !== sizeFilters){
@@ -64,7 +64,7 @@ export const Filtros = ({
             //console.log("local copy Array after", localCopyArray)
             setFilteredQueries([...localCopyArray]);
         }
-    },[filters,erasedIndex,filteredQueries,indexMod,initialQuery,path,sizeFilters])
+    },[filters,erasedIndex,filteredQueries,indexMod,initialQuery,sizeFilters])
     const handleAddFiltro = ( value) => {
         const filterIndex = filters.findIndex(filter => 
             filter.field === filtro

@@ -9,12 +9,12 @@ export const MostrarItems = (
     useEffect(()=>{
         if (!loadingData && data?.docs.length > 0) {
             const falseArray = new Array(data?.docs.length).fill(false);
-            console.log("False ",falseArray);
+            //console.log("False ",falseArray);
             setDeleteToggle(falseArray);
         }
     },[loadingData,eliminar,deleteToggle.length,data])
     useEffect(()=>{
-        console.log("data_habs",data?.docs);
+        //console.log("data_habs",data?.docs);
     },[data])
     return (
         <div>

@@ -10,11 +10,11 @@ export const ProductoCaja = ({
     return(
         <div>
             {producto}
-            {!loadingData&&Object.entries(data.data().Contenido).map((Item)=>{
+            {!loadingData&&Object.entries(data.data().Contenido).map((Item,index)=>{
                 return (
-                    <>
+                    <div key={index}>
                         {Item[0]}
-                    </>
+                    </div>
                 )
             })}
             {!loadingData&&data.data().Total}

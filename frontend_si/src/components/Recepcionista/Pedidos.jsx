@@ -47,12 +47,15 @@ export const Pedidos = ({
             Fecha: serverTimestamp(),
         })
         let productos = [];
+        let totalCaja = 0;
         await getDoc(cajaRef).then((doc)=>{
             productos = doc.data().productos;
             productos.push(reciboRef.id);
+            totalCaja = doc.data().ingresos;
         })
         await updateDoc(cajaRef,{
             productos: productos,
+            ingresos: totalCaja + total,
         })
         handleClose();
       }

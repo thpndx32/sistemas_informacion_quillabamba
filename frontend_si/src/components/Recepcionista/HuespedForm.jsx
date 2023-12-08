@@ -23,7 +23,7 @@ console.log("here",date);
   const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
   const year = date.getFullYear();
 
-  return `${day} ${month} ${year}`;
+  return `${day}/${month}/${year}`;
 }
 
 export const HuespedForm = (
@@ -71,7 +71,8 @@ export const HuespedForm = (
             daysToPay[formatDate(fechas[0].add(i,'day').$d)]={
                 Cantidad: 1,
                 Costo: precio,
-                Recibo: '',
+                Recibo: [],
+                Pagados: 0,
             };
         }
         if (completeRows.length > 0) {
@@ -85,20 +86,8 @@ export const HuespedForm = (
                 Contenido: daysToPay,
             });
             handleCliente(docuRef.id);
+            handleClose();
             //console.log("ficha", docuRef.id);
-        } else {
-            // Ninguna fila está completamente llena
-            //console.log("Ninguna fila está completamente llena.");
-            // Puedes mostrar un mensaje de error o realizar alguna otra acción aquí.
-        }
-        if (validRows.length > 0) {
-            // Al menos una fila está completamente llena, puedes continuar con el proceso
-            //console.log(validRows.length, "numero de filas validas");
-            // También puedes acceder a los datos completos en validRows.
-        } else {
-            // Ninguna fila está completamente llena
-            //console.log("Ninguna fila es valida.");
-            // Puedes mostrar un mensaje de error o realizar alguna otra acción aquí.
         }
     }
     return(

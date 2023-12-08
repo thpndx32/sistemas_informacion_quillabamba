@@ -1,10 +1,9 @@
 import { useSignOut } from "react-firebase-hooks/auth";
-import { Link, redirect, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { auth } from "../../config/firebase";
 
 export const Admin = () => {
-    const navigate = useNavigate();
-    const [logOut, loadingLogOut, errorLogOut] = useSignOut(auth);
+    const [logOut] = useSignOut(auth);
     return (
         <>
             <button onClick={async ()=>await logOut()}>

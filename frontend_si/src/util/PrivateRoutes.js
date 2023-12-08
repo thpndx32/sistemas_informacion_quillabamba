@@ -1,10 +1,11 @@
 import {Navigate, Outlet} from 'react-router-dom'
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '../views/AppQuillabamba';
 export const PrivateRoutes = (
     {usrType, prevPage}
 ) => {
     const [usr,data, loadingData] = useContext(AuthContext);
+    //console.log("here private");
     //console.log("data",data?.docs);
     //console.log("loading data",loadingData);
     //console.log("usrType",usrType);
