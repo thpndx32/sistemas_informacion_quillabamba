@@ -7,19 +7,8 @@ import { ShowFilasFicha } from "./ShowFilasFicha";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { CompareDates } from "../../util/CompareDates";
 import { ModificarEstadia } from "./ModificarEstadia";
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '50%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
+import { BoxStyle } from "../../styles/Box";
+import { FichaFechaStyle, FichaStyle, FichaTituloContenidoStyle, FichaTituloStyle, FilaFichaStyle } from "../../styles/FichaStyle";
 export const Ficha = ({
     show, handleClose, idFicha, caja=false
 }) => {
@@ -119,26 +108,53 @@ export const Ficha = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
     >
-        <Box sx={style}>
+        <Box sx={BoxStyle}>
+            <FichaStyle>
             <h3>
                 Ficha
             </h3>
+            <FichaTituloContenidoStyle>
+                <FichaTituloStyle>
+                Numero de Habitacion    
+                </FichaTituloStyle>  
+                <FichaTituloStyle clase="numeroHabitacion">
+                {!loadingData&&data.data().Numero_Habitacion}
+                </FichaTituloStyle>
+            </FichaTituloContenidoStyle>
+            <div>
+                <FichaTituloStyle>
+                    Huespedes
+                </FichaTituloStyle>
             {!loadingData&&data.data().Huespedes.map((row,index)=>{
                 return (
-                <div key={index}>
-                    {row?.nombre}
-                    {row?.telefono}
-                    {row?.dni}
-                </div>
+                <FilaFichaStyle key={index}>
+                    <div>
+                        {row?.nombre}
+                    </div>
+                    <div>
+                        {row?.telefono}
+                    </div>
+                    <div>
+                        {row?.dni}
+                    </div>
+                </FilaFichaStyle>
                 )
-            })}
-            <div>
-            {!loadingData&&data.data().Numero_Habitacion}
+            })}   
             </div>
-            <div>
-            {!loadingData&&data.data().Inicio_Estadia.toDate().toDateString()}
-            {!loadingData&&data.data().Final_Estadia[data.data().Final_Estadia.length-1].toDate().toDateString()}
-            </div>
+            <FichaFechaStyle>
+                <div>
+                    <FichaTituloStyle>Fecha Entrada</FichaTituloStyle>
+                    <FilaFichaStyle clase="Fecha">
+                    {!loadingData&&data.data().Inicio_Estadia.toDate().toDateString()}
+                    </FilaFichaStyle>
+                </div>
+                <div>
+                    <FichaTituloStyle>Fecha Salida</FichaTituloStyle>
+                    <FilaFichaStyle clase="Fecha">
+                    {!loadingData&&data.data().Final_Estadia[data.data().Final_Estadia.length-1].toDate().toDateString()}
+                    </FilaFichaStyle>
+                </div>
+            </FichaFechaStyle>
             {!loadingData&&(caja?(
                 data.data().Activo?
                 <div>
@@ -146,15 +162,15 @@ export const Ficha = ({
                     control={<Switch value={payment} 
                     checked={payment} onChange={()=>{setPayment(!payment)}}
                     />} label="Pagado/Por pagar" />
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <FichaTituloStyle>
                     {payment?"Productos/servicios pagados":"Productos/servicios por pagar"}
-                    </Typography>
+                    </FichaTituloStyle>
                     {<ShowFilasFicha payment={payment} productos={data.data().Contenido} loadingProductos={loadingData} caja={caja}/>}
                 </div>:
                 <div>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <FichaTituloStyle>
                     {"Productos/servicios Facturados"}
-                    </Typography>
+                    </FichaTituloStyle>
                     {<ShowFilasFicha payment={!payment} productos={data.data().Contenido} loadingProductos={loadingData} caja={caja}/>}
                 </div>
                 )
@@ -173,7 +189,6 @@ export const Ficha = ({
                     {data.data().Activo&&<Button onClick={()=>{setFormProductos(true)}}>
                         Añadir productos
                     </Button>}
-                    {data.data().Activo&&<ModificarEstadia Final_Estadia={data.data().Final_Estadia}/>}
                     {!payment&&<Button onClick={handlePay} disabled={false}>
                         Pagar 
                     </Button>}
@@ -182,6 +197,7 @@ export const Ficha = ({
                 </>
                 )
             }
+            </FichaStyle>
         </Box>
     </Modal>);
 }

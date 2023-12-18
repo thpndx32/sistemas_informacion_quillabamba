@@ -9,6 +9,8 @@ import { AuthContext } from './AppQuillabamba';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, query, where } from 'firebase/firestore';
 import { Navigate, redirect } from 'react-router-dom';
+import { General } from '../styles/General';
+import { Header } from '../styles/Header';
 
 function App({
   setCajaRef
@@ -32,21 +34,10 @@ function App({
   //if(value) {value.docs.map((doc)=>(console.log("valor",doc.get('correo'))));}
   //console.log("valor_val",value);
   return (
-    <div className="App">
-      <header className="App-header">
-        <Switch variable={negateState}></Switch>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <General>
+        <Header>
+          <Switch variable={negateState}></Switch>
+        </Header>
         {
           usr?(
             value ? (
@@ -61,8 +52,7 @@ function App({
           :
           <LoginBox auth={auth} state={state} setCajaRef={setCajaRef}></LoginBox>
         }
-      </header>
-    </div>
+      </General>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { FilaFicha } from "./FilaFicha";
+import { FichaHeaderStyle, FichaShowFilas, FilaFichaStyle } from "../../styles/FichaStyle";
 
 export const ShowFilasFicha = ({
     payment,productos,setArrPay,arrPay, caja=false
@@ -45,7 +46,7 @@ export const ShowFilasFicha = ({
     };
     const handleCheckPay = useCallback((index_Rel) => {
         let auxArrPay1 = arrPay;
-        //console.log(index_Rel);
+        console.log("indexRel",index_Rel);
         //console.log("arrPay",arrPay);
         console.log("auxArray1 before",auxArrPay1[index_Rel]);
         auxArrPay1[index_Rel][0] = !arrPay[index_Rel][0];
@@ -60,26 +61,36 @@ export const ShowFilasFicha = ({
     }
     return (
         <div>
-            <>
-                Producto
-                Cantidad
-                Costo
-                {!payment&&"Pagar"}
-            </>
-            {payment
-            ?
-            Object.entries(productos).sort((a,b)=>sortRecibos(a,b)).map((val)=>{
-                console.log("IDK",val);
-                return(<FilaFicha key={val[0]} val={val} payed={true} payment={payment} caja={caja}/>);
-            })
-            :
-            Object.entries(resultadoObjeto).sort((a,b)=>sortRecibos(a,b)).map((val,index)=>{
-                console.log("Recibo",val);
-                return(<FilaFicha key={val[0]} val={val} index_Abs={index} productos={resultadoObjeto}
-                     handlePay={handleCheckPay} payment={payment} caja={caja}
-                     arrPay={arrPay} modifyAuxArrPay={updateAuxArr} auxArrPay={auxArr}/>);
-            })
-            }
+            <FichaHeaderStyle numGrid={(!payment&&!caja)?"4":"3"}>
+                <div>
+                    Producto
+                </div>
+                <div>
+                    Cantidad
+                </div>
+                <div>
+                    Costo
+                </div>
+                <div>
+                    {!payment&&!caja&&"Pagar"}
+                </div>
+            </FichaHeaderStyle>
+            <FichaShowFilas>
+                {payment
+                ?
+                Object.entries(productos).sort((a,b)=>sortRecibos(a,b)).map((val)=>{
+                    console.log("IDK",val);
+                    return(<FilaFicha key={val[0]} val={val} payed={true} payment={payment} caja={caja}/>);
+                })
+                :
+                Object.entries(resultadoObjeto).sort((a,b)=>sortRecibos(a,b)).map((val,index)=>{
+                    console.log("Recibo",val);
+                    return(<FilaFicha key={val[0]} val={val} index_Abs={index} productos={resultadoObjeto}
+                        handlePay={handleCheckPay} payment={payment} caja={caja}
+                        arrPay={arrPay} modifyAuxArrPay={updateAuxArr} auxArrPay={auxArr}/>);
+                })
+                }
+            </FichaShowFilas>
         </div>
     )
 }

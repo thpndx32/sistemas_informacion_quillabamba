@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { ItemsFila } from "./ItemsFila";
+import { ElementoLista, Listado } from "../../../styles/Listado";
 
 export const MostrarItems = (
     {q, eliminar, deleteToggle, setDeleteToggle, dataArray}
@@ -17,10 +18,30 @@ export const MostrarItems = (
         //console.log("data_habs",data?.docs);
     },[data])
     return (
-        <div>
-            <ul>
+        <Listado>
+                <ElementoLista>
+                    <div>
+                        Producto
+                    </div>
+                    <div>
+                        Stock
+                    </div>
+                    <div>
+                        Precio
+                    </div>
+                    <div>
+                        Comerciabilidad
+                    </div>
+                    <div>
+                        Editar
+                    </div>
+                </ElementoLista>
                 {!loadingData&&deleteToggle.length>0&&(
-                    data.docs.map((e,index)=>{
+                    data.docs.sort((a,b)=>{
+                        const nombreA = a.data().Nombre.toLowerCase();
+                        const nombreB = b.data().Nombre.toLowerCase();
+                        return nombreA.localeCompare(nombreB);
+                    }).map((e,index)=>{
                         //console.log("e id",e.ref);
                         return <ItemsFila loadingData={loadingData}  key={e.id} e={e} index={index}
                          handleDelete={setDeleteToggle} deleteArray={deleteToggle}
@@ -28,7 +49,6 @@ export const MostrarItems = (
                     })
                     )
                 }
-            </ul>
-        </div>
+        </Listado>
     )
 }

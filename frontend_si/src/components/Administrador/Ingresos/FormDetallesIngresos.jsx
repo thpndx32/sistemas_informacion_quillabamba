@@ -5,18 +5,8 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { firestore } from "../../../config/firebase";
 import { ProductoCaja } from "../../Recepcionista/Caja/ProductoCaja";
 import { FichaCaja } from "../../Recepcionista/Caja/FichaCaja";
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '70%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
+import { BoxStyle } from "../../../styles/Box";
+import { ElementoListadoBarraStyle, ListadoBarraStyle } from "../../../styles/Listado";
 
 export const FormDetallesIngresos = ({
     show,handleClose,caja
@@ -32,20 +22,53 @@ export const FormDetallesIngresos = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         >
-            <Box sx={style}>
+            <Box sx={BoxStyle}>
                 <FormControlLabel
                 control={<Switch
                     checked={toSee}
                     onChange={()=>{setToSee(!toSee)}}
                 />} label={toSee?"Fichas":"Productos Individuales"}
                 />
-                {!toSee?
-                caja?.data()?.productos?.map((producto,index)=>{
-                    return <ProductoCaja key={index} producto={producto}/>
-                })
-                :Object.entries(caja?.data()?.fichas)?.map((ficha,index)=>{
-                    return <FichaCaja key={index} ficha={ficha}/>
-                })}
+                {!toSee?<div>
+                    <ElementoListadoBarraStyle clase="RecibosHeader" fontSize="20">
+                        <div>
+                            Id Recibo
+                        </div>
+                        <div>
+                            Items
+                        </div>
+                        <div>
+                            Costo
+                        </div>
+                    </ElementoListadoBarraStyle>
+                    <ListadoBarraStyle>  
+                    {caja?.data()?.productos?.map((producto,index)=>{
+                        return <ProductoCaja key={index} producto={producto}/>
+                    })}
+                    </ListadoBarraStyle>
+                    </div>
+                :<div>
+                    <ElementoListadoBarraStyle clase="Header">
+                        <div>
+                            Numero Habitacion
+                        </div>
+                        <div>
+                            Ingresos totales
+                        </div>
+                        <div>
+                            Mostrar ficha
+                        </div>
+                        <div>
+                            Mostrar recibos
+                        </div>
+                    </ElementoListadoBarraStyle>
+                    <ListadoBarraStyle>{
+                        Object.entries(caja?.data()?.fichas)?.map((ficha,index)=>{
+                            return <FichaCaja key={index} ficha={ficha}/>
+                        })    
+                    }</ListadoBarraStyle>
+                </div>
+                }
             </Box>
         </Modal>
     )

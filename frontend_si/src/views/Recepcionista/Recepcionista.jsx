@@ -6,6 +6,10 @@ import { MostrarHabs } from "../../components/MostrarHabs";
 import {  collection, doc, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { FormProductoInd } from "../../components/Recepcionista/FormProductoInd";
+import { General, Salir } from "../../styles/General";
+import { Header } from "../../styles/Header";
+import { Listado } from "../../styles/Listado";
+import { Filtro } from "../../styles/Filtro";
 export const Recepcionista = () => {
     //console.log("Recepcionista");
     const path = "habitaciones";
@@ -37,26 +41,28 @@ export const Recepcionista = () => {
         await logOut();
     }
     return(
-        <div>
-            <button onClick={handleCierre}>
-                Salir de la cuenta
-            </button>
-            <button onClick={()=>handleProducto()}>
-                Registrar producto individual
-            </button>
-            <Link to={"Caja"} relative="path">
-                <button>
-                    Ver Caja
+        <General>
+            <Header>
+                <Salir onClick={handleCierre}>
+                    Salir de la cuenta
+                </Salir>
+                <button onClick={()=>handleProducto()}>
+                    Registrar producto individual
                 </button>
-            </Link>
-            {
-                <div>
+                <Link to={"Caja"} relative="path">
+                    <button>
+                        Ver Caja
+                    </button>
+                </Link>
+            </Header>
+            <Listado>
+                <Filtro>
                     Filtrar segun
                     <Filtros setFilteredQuery={handleFilterQuery} q={q} path={path} initialQuery={initialQuery} setInitialQuery={handleInitialQuery}/>
-                </div>
-            }
-            <MostrarHabs q={filteredQuery} initialQuery={initialQuery}/>
+                </Filtro>
+                <MostrarHabs q={filteredQuery} initialQuery={initialQuery}/>
+            </Listado>
             {productoIndividual&&<FormProductoInd show={productoIndividual} handleClose={()=>{setProductoIndividual(false)}}/>}
-        </div>
+        </General>
     )
 }

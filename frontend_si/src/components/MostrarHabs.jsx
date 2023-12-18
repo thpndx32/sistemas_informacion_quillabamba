@@ -8,6 +8,7 @@ import { AuthContext } from "../views/AppQuillabamba";
 import { TrackQuery } from "./TrackQuery";
 import { Await } from "react-router-dom";
 import { Intersection } from "../util/Intersection";
+import { ElementoLista } from "../styles/Listado";
 export const estadosHabitaciones = ["Disponible","Ocupado","Limpieza","No disponible"];
 
 const useControlQueries = (q, initialQuery) =>{
@@ -22,7 +23,7 @@ const useControlQueries = (q, initialQuery) =>{
         setLoading(true);
         //console.log("enters here");
         q.forEach((quer,index)=>{
-            //console.log("quer",quer);
+            console.log("quer",quer);
             const unsubscribe = onSnapshot(quer,(snapshot)=>{
                 let copyQueries;
                 if(initialQuery){
@@ -41,7 +42,7 @@ const useControlQueries = (q, initialQuery) =>{
                     copyQueries.push(snapshot.docs);
                     //console.log("copyQueries",copyQueries);
                 }
-                //console.log(`snapshot ${index}`, snapshot.docs);
+                console.log(`snapshot ${index}`, snapshot.docs);
                 setLastQuery(initialQuery);
                 setArrQueries([...copyQueries]);
             })
@@ -79,22 +80,34 @@ export const MostrarHabs = (
     },[data])*/
     return (
         <div>
-            <ul>
-                {!loadingDataUsr&&!loadingData&&(deleteToggle?.length>0||!deleteToggle)&&(
-                    data.sort(
-                        (a, b) => a.data().Numero_Habitacion-b.data().Numero_Habitacion
-                        ).map((e,index)=>{
-                        //console.log("e id",e);
-                        if(dataUsr?.docs[0].data()?.rol==="administrador") return <HabitacionFila loadingData={loadingData}  key={e.id} e={e} index={index}
-                         handleDelete={setDeleteToggle} deleteArray={deleteToggle}
-                          eliminar={eliminar} habitaciones={habitaciones} estados={estadosHabitaciones}/>
-                        else if (dataUsr?.docs[0].data()?.rol==="recepcionista" && e.data().estado !== "No disponible") return <HabitacionFila loadingData={loadingData}  key={e.id} e={e} index={index}
+            <ElementoLista clase="Habitaciones">
+                    <div>
+                        Tipo habitación
+                    </div>
+                    <div>
+                        Precio
+                    </div>
+                    <div>
+                        Numero/Estado
+                    </div>
+                    <div>
+                        Editar
+                    </div>
+            </ElementoLista>
+            {!loadingDataUsr&&!loadingData&&(deleteToggle?.length>0||!deleteToggle)&&(
+                data.sort(
+                    (a, b) => a.data().Numero_Habitacion-b.data().Numero_Habitacion
+                    ).map((e,index)=>{
+                    //console.log("e id",e);
+                    if(dataUsr?.docs[0].data()?.rol==="administrador") return <HabitacionFila loadingData={loadingData}  key={e.id} e={e} index={index}
                         handleDelete={setDeleteToggle} deleteArray={deleteToggle}
-                         eliminar={eliminar} habitaciones={habitaciones} estados={estadosHabitaciones}/>
-                    })
-                    )
-                }
-            </ul>
+                        eliminar={eliminar} habitaciones={habitaciones} estados={estadosHabitaciones}/>
+                    else if (dataUsr?.docs[0].data()?.rol==="recepcionista" && e.data().estado !== "No disponible") return <HabitacionFila loadingData={loadingData}  key={e.id} e={e} index={index}
+                    handleDelete={setDeleteToggle} deleteArray={deleteToggle}
+                        eliminar={eliminar} habitaciones={habitaciones} estados={estadosHabitaciones}/>
+                })
+                )
+            }
         </div>
     )
 }

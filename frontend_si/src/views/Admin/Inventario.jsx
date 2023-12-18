@@ -6,6 +6,8 @@ import { Button } from "@mui/material";
 import { FormCrearItem } from "../../components/Administrador/Inventario/FormCrearItem";
 import { MostrarItems } from "../../components/Administrador/Inventario/MostrarItems";
 import { FormEliminarItems } from "../../components/Administrador/Inventario/FormEliminarItems";
+import { General } from "../../styles/General";
+import { Header } from "../../styles/Header";
 
 export const Inventario = () => {
     const path = "inventario";
@@ -55,8 +57,8 @@ export const Inventario = () => {
     };
     const handleNoConfirmar = () => {setConfirmar(false)};
     return (
-        <div>
-            <div>
+        <General>
+            <Header>
                 {eliminar?
                     <div>
                         <Retroceder toDo={()=>setEliminar(!eliminar)}/>
@@ -75,7 +77,7 @@ export const Inventario = () => {
                         </Button>
                     </div>
                 }
-            </div>
+            </Header>
             
             <MostrarItems 
             q={q} eliminar={eliminar} deleteToggle={deleteToggle}
@@ -84,6 +86,6 @@ export const Inventario = () => {
              show={confimar} handleClose={handleCloseE}
               sinConfirmar={handleNoConfirmar}/>
             <FormCrearItem show={form} handleClose={handleCloseF} path={path} dataArray={dataArray}/>
-        </div>
+        </General>
     )
 }

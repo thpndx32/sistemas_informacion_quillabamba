@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { IconButton } from "@mui/material";
 import { Ficha } from "../../Fichas/Ficha";
+import { ElementoListadoBarraStyle, ListadoBarraStyle } from "../../../styles/Listado";
 
 export const FichaCaja = ({
     ficha
@@ -52,32 +53,55 @@ export const FichaCaja = ({
     return(
         <div>
             {!loadingData&&<div>
-                {data.data().Numero_Habitacion}   
-                {total} 
-                <IconButton onClick={()=>setShowFicha(true)}>
-                    <InsertDriveFileIcon/>
-                </IconButton>
-                <button onClick={()=>setShowRecibos(!showRecibos)}>
-                    Recibos
-                </button>
+                <ElementoListadoBarraStyle clase="Fichas">
+                    <div>
+                        {data.data().Numero_Habitacion}   
+                    </div>
+                    <div>
+                        {total} 
+                    </div>
+                    <div>
+                    <IconButton onClick={()=>setShowFicha(true)}>
+                        <InsertDriveFileIcon/>
+                    </IconButton>
+                    </div>
+                    <button onClick={()=>setShowRecibos(!showRecibos)}>
+                        Recibos
+                    </button>
+                </ElementoListadoBarraStyle>
             </div>}
+            {showRecibos&&<ElementoListadoBarraStyle clase="RecibosHeader">
+                <div>
+                    Id Recibo
+                </div>
+                <div>
+                    Items
+                </div>
+                <div>
+                    Costo
+                </div>
+            </ElementoListadoBarraStyle>}
+            <ListadoBarraStyle maxHeight="250">
             {showRecibos&&recibos.map((recibo,index)=>{
                 //console.log(recibo);
                 return (
-                    <div key={index}>
-                        {recibo[0]}
+                    <ElementoListadoBarraStyle key={index} clase="Recibos">
+                        <div>{recibo[0]}</div>
+                        <div>
                         {recibo[1].map((nombre,index)=>{
                             return(
-                                <p key={index}>
+                                <div key={index}>
                                     {nombre}
-                                </p>
+                                </div>
                             )
                         })}
-                        {recibo[2]}
-                    </div>
+                        </div>
+                        <div>{recibo[2]}</div>
+                    </ElementoListadoBarraStyle>
                 )
             })}
             {showFicha&&<Ficha show={showFicha} handleClose={()=>setShowFicha(false)} idFicha={data} caja={true}/>}
+        </ListadoBarraStyle>
         </div>
     )
 }

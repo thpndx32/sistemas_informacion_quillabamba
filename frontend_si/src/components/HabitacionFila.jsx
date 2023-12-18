@@ -15,6 +15,7 @@ import { Circle } from "../styles/circle";
 import { HuespedForm } from "./Recepcionista/HuespedForm";
 import { firestore } from "../config/firebase";
 import { Ficha } from "./Fichas/Ficha";
+import { ElementoLista } from "../styles/Listado";
 
 export const HabitacionFila = (
     {e,index,handleDelete,deleteArray,eliminar, habitaciones, estados}
@@ -144,11 +145,14 @@ export const HabitacionFila = (
         <div>
             {
                 !loadingDataUsr&&(!modificar?(
+                    <ElementoLista index={index} clase="Habitaciones">
+                    <div>{e.data()?.tipo}</div>
+                    <div>{e.data()?.precio.toFixed(2)}</div>
                     <div>
-                    {e.data()?.Numero_Habitacion} 
-                    {e.data()?.tipo} 
-                    {e.data()?.precio}
-                    <Circle color={handleColor(e.data()?.estado)}/>
+                        {e.data()?.Numero_Habitacion}
+                        <Circle color={handleColor(e.data()?.estado)}/>
+                    </div>
+                    <div>
                     {eliminar&&<ImageToggle handleState={setState} index={index}/>}
                     {dataUsr?.docs[0].data()?.rol==="administrador"&&<IconButton onClick={handleModificar}>
                         <DriveFileRenameOutlineIcon/>
@@ -168,23 +172,29 @@ export const HabitacionFila = (
                         )
                     }
                     </div>
+                    </ElementoLista>
                 ):(
-                    <div>
-                        {habitacion}
+                    <ElementoLista index={index} clase="Habitaciones">
                         <Dropdownlist updateData={setTipo} arrData={habitaciones}
                             defaultValue={tipo}/>
-                        <input value={precio} type="number" onChange={(event)=>{
+                        <input value={precio.toFixed(2)} type="number" onChange={(event)=>{
                             setPrecio(event.target.value);
                         }}/>
+                        <div>
+                        {habitacion}
                         <Dropdownlist updateData={setEstadoHab} arrData={estados}
                             defaultValue={estadoHab}/>
-                        <IconButton onClick={handleModificar}>
-                            <DoneIcon/>
-                        </IconButton>
-                        <IconButton onClick={()=>{setModificar(!modificar)}}>
-                            <CloseIcon/>
-                        </IconButton>
-                    </div>
+                        </div>
+                        <div>
+                            <IconButton onClick={handleModificar}>
+                                <DoneIcon/>
+                            </IconButton>
+                            <IconButton onClick={()=>{setModificar(!modificar)}}>
+                                <CloseIcon/>
+                            </IconButton>
+                        </div>
+                        
+                    </ElementoLista>
                 ))
             }
             {clientForm&&<HuespedForm show={clientForm} tipoHab={tipo} handleClose={handleClose}

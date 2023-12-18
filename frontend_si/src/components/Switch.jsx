@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { SwitchStyle } from "../styles/Login";
 
 export const Switch = (
  {variable}
@@ -13,9 +14,9 @@ export const Switch = (
         //console.log(variable);
      }, [Toggled]);
   return (
-    <label className="toggles-slider" htmlFor="switchRoles">
+    <SwitchStyle className="toggles-slider" htmlFor="switchRoles">
         {Toggled===true?"recepcionista":"admin"}
         <input type="checkbox"  checked={Toggled} onChange={toggleSwitch} id="switchRoles"/>
-    </label>
+    </SwitchStyle>
   )
 }

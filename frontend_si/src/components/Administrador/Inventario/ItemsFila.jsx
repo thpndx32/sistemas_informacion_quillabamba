@@ -8,6 +8,7 @@ import { updateDoc } from "firebase/firestore";
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Dropdownlist } from "../../Dropdownlist";
 import { ImageToggle } from "../Habitacion/ImageToggle";
+import { ElementoLista } from "../../../styles/Listado";
 
 export const ItemsFila = (
     {e,index,handleDelete,deleteArray,eliminar, data}
@@ -56,46 +57,63 @@ export const ItemsFila = (
         setComerciabilidad(e.data()?.Comerciabilidad);
     },[modificar]);
     return (
-        <div>
+        <ElementoLista index={index} clase="Productos">
             {
                 !modificar?(
-                    <div>
-                    {e.data()?.Nombre}
-                    <IconButton onClick={handleMinus} disabled={cantidad===0}>
-                        <RemoveIcon/>
-                    </IconButton>
-                    {e.data()?.Cantidad} 
-                    <IconButton onClick={handleAdd}>
-                        <AddIcon/>
-                    </IconButton>
-                    {e.data()?.Precio}
-                    {e.data()?.Comerciabilidad?<>Comerciable</>:<>No comerciable</>}
-                    {eliminar&&<ImageToggle handleState={setState} index={index}/>}
-                    <IconButton onClick={handleModificar}>
-                        <DriveFileRenameOutlineIcon/>
-                    </IconButton>
-                    </div>
-                ):(
-                    <div>
+                    <>
+                        <div>
                         {e.data()?.Nombre}
+                        </div>
+                        <div>
+                            <IconButton onClick={handleMinus} disabled={cantidad===0}>
+                                <RemoveIcon/>
+                            </IconButton>
+                            {e.data()?.Cantidad} 
+                            <IconButton onClick={handleAdd}>
+                                <AddIcon/>
+                            </IconButton>
+                        </div>
+                        <div>
+                        {e.data()?.Precio.toFixed(2)}
+                        </div>
+                        <div>
+                        {e.data()?.Comerciabilidad?<>Comerciable</>:<>No comerciable</>}
+                        </div>
+                        <div>
+                        {eliminar&&<ImageToggle handleState={setState} index={index}/>}
+                        <IconButton onClick={handleModificar}>
+                            <DriveFileRenameOutlineIcon/>
+                        </IconButton>
+                        </div>
+                    </>
+                ):(
+                    <>
+                        <div>
+                            {e.data()?.Nombre}
+                        </div>
                         <input value={cantidad} type="number" onChange={(event)=>{
                             setCantidad(parseInt(event.target.value));
                         }}/>
-                        <input value={precio} type="number" onChange={(event)=>{
+                        <input value={precio.toFixed(2)} type="number" onChange={(event)=>{
                             setPrecio(parseFloat(event.target.value));
                         }}/>
-                        <Switch checked={comerciabilidad} onChange={()=>setComerciabilidad(!comerciabilidad)}
-                            inputProps={{ 'aria-label': 'controlled' }}/>
-                        <label>{`${comerciabilidad?"Comerciable":"No comerciable"}`}</label>
-                        <IconButton onClick={handleModificar}>
-                            <DoneIcon/>
-                        </IconButton>
-                        <IconButton onClick={()=>{setModificar(!modificar)}}>
-                            <CloseIcon/>
-                        </IconButton>
-                    </div>
+                        <div>
+                            <Switch checked={comerciabilidad} onChange={()=>setComerciabilidad(!comerciabilidad)}
+                                inputProps={{ 'aria-label': 'controlled' }}/>
+                            <label>{`${comerciabilidad?"Comerciable":"No comerciable"}`}</label>
+                        </div>
+                        
+                        <div>
+                            <IconButton onClick={handleModificar}>
+                                <DoneIcon/>
+                            </IconButton>
+                            <IconButton onClick={()=>{setModificar(!modificar)}}>
+                                <CloseIcon/>
+                            </IconButton>
+                        </div>
+                    </>
                 )
             }
-        </div>
+        </ElementoLista>
     )
 }

@@ -7,6 +7,10 @@ import { MostrarHabs } from "../../components/MostrarHabs";
 import { FormEliminar } from "../../components/Administrador/Habitacion/FormEliminar";
 import { Retroceder } from "../../components/Retroceder";
 import { Filtros } from "../../components/Filtros/Filtros";
+import { General } from "../../styles/General";
+import { Header } from "../../styles/Header";
+import { Listado } from "../../styles/Listado";
+import { Filtro, FiltroNuevo } from "../../styles/Filtro";
 export const habitaciones = ["triple","doble","matrimonial","simple", "matrimonial con adicional","matrimonial con doble adicional", "queen", "cuadruple"];
 export const Habitaciones = () => {
     const path = "habitaciones";
@@ -19,13 +23,17 @@ export const Habitaciones = () => {
     const [initialQuery, setInitialQuery] = useState(true);
     useEffect (()=>{
         //console.log("USE EFFECT");
-        //console.log(JSON.stringify(filteredQuery[0]));
+        console.log("Habitaciones filtered Query",filteredQuery);
         //console.log(JSON.stringify(q));
         if(JSON.stringify(filteredQuery[0]) === JSON.stringify(q)){
-            //console.log("USE EFFECT");
+            console.log("USE EFFECT");
             setInitialQuery(true);
         }
-    },[filteredQuery,q])
+    },[filteredQuery])
+    const handleFilters = (val)=>{
+        console.log("Habitaciones handleFilters",val);
+        setFilteredQuery(val);
+    }
     const handleCloseF = () => {setForm(false)};
     const handleCloseE = () => {
         console.log("deleteToggle", deleteToggle);
@@ -60,8 +68,8 @@ export const Habitaciones = () => {
     };
     const handleNoConfirmar = () => {setConfirmar(false)};
     return (
-        <div>
-            <div>
+        <General>
+            <Header>
                 {eliminar?
                     <div>
                         <Retroceder toDo={()=>setEliminar(!eliminar)}/>
@@ -80,19 +88,21 @@ export const Habitaciones = () => {
                         </Button>
                     </div>
                 }
-            </div>
-            <div>
+            </Header>
+            <Listado>
+            <Filtro>
                 Filtrar segun
-                <Filtros setFilteredQuery={setFilteredQuery} q={q} path={path} initialQuery={initialQuery} setInitialQuery={setInitialQuery}/>
-            </div>
+                <Filtros setFilteredQuery={handleFilters} q={q} path={path} initialQuery={initialQuery} setInitialQuery={setInitialQuery}/>
+            </Filtro>
             <MostrarHabs q={filteredQuery} eliminar={eliminar} deleteToggle={deleteToggle}
              setDeleteToggle={setDeleteToggle} habitaciones={habitaciones} initialQuery={initialQuery}/>
+            </Listado>
             <FormEliminar
              show={confimar} handleClose={handleCloseE}
               sinConfirmar={handleNoConfirmar}/>
             {form&&<FormCrearHab
              show={form} handleClose={handleCloseF}
               habitaciones={habitaciones}/>}
-        </div>
+        </General>
     )
 }

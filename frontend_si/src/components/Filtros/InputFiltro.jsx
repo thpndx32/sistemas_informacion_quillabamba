@@ -4,6 +4,7 @@ import { habitaciones } from "../../views/Admin/Habitaciones";
 import { estadosHabitaciones } from "../MostrarHabs";
 import { IconButton } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
+import { FiltroNuevo } from "../../styles/Filtro";
 
 export const InputFiltro = ({
     Filtro, setOperacion, setValorFiltro, valorFiltro, handleAddFiltro, Operacion
@@ -28,16 +29,16 @@ export const InputFiltro = ({
         }
     },[Filtro])
     return (
-        <>
+        <FiltroNuevo>
             {(Filtro==="precio"||Filtro==="Numero_Habitacion")?
             <>
                 <Dropdownlist updateData={setNombreOperacion} defaultValue={nombreOperacion} arrData={nombresOperaciones.slice(2)}/>
-                <p> a </p>
+                a
             </>
             :
             <>
                 <Dropdownlist updateData={setNombreOperacion} defaultValue={nombreOperacion} arrData={nombresOperaciones.slice(0,2)}/>
-                <p>a</p>
+                a
             </>
             }
             {
@@ -56,6 +57,6 @@ export const InputFiltro = ({
             <IconButton onClick={()=>{handleAddFiltro(valorFiltro)}}>
                 <CheckIcon/>
             </IconButton>}
-        </>
+        </FiltroNuevo>
     )
 }

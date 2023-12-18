@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useCreateUserWithEmailAndPassword, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { firestore } from "../config/firebase";
 import { Dropdownlist } from "./Dropdownlist";
+import { LoginBoxStyle, LoginButton } from "../styles/Login";
 export const LoginBox = (
     {auth,
     state
@@ -59,33 +60,41 @@ export const LoginBox = (
         }
     }
 	return (
-		<div>
+		<LoginBoxStyle>
             {state ? (
                 <>
-                <input value={correo} placeholder="correo" type="email" 
-                    onChange={(e)=>{setCorreo(e.target.value)}}
-                    onKeyDown={handleEnter}
-                >
-                </input>
-                <input value={contra} placeholder="contraseña" type="password"
-                    onChange={(e)=>{setContra(e.target.value)}}
-                    onKeyDown={handleEnter}
-                >
-        	    </input>
-                <button onClick={() =>signInorUp("signIn")}>ingresar</button>
-                <button onClick={() =>signInorUp("signUp")}>registrarse</button>
+                <div>
+                    <input value={correo} placeholder="correo" type="email" 
+                        onChange={(e)=>{setCorreo(e.target.value)}}
+                        onKeyDown={handleEnter}
+                    >
+                    </input>
+                    <input value={contra} placeholder="contraseña" type="password"
+                        onChange={(e)=>{setContra(e.target.value)}}
+                        onKeyDown={handleEnter}
+                    >
+                    </input>
+                </div>
+                <div>
+                <LoginButton onClick={() =>signInorUp("signIn")}>ingresar</LoginButton>
+                </div>
                 </>
             ):
             <>
-            <Dropdownlist updateData={setCorreo} q={q} val="correo" content="turno"/>
+                <div>
+                <Dropdownlist updateData={setCorreo} q={q} val="correo" content="turno"/>
                 <input value={contra} placeholder="contraseña" type="password" 
                     onChange={(e)=>{setContra(e.target.value)}}
                     onKeyDown={handleEnter}
                 >
         	    </input>
-                <button onClick={() =>signInorUp("signIn")}>ingresar</button>
+                </div>
+                
+                <div>
+                <LoginButton onClick={() =>signInorUp("signIn")}>ingresar</LoginButton>
+                </div>
             </>
             }
-        </div>
+        </LoginBoxStyle>
     )
 }

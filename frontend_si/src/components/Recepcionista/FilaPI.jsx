@@ -83,6 +83,9 @@ export const FilaPI = ({
             <IconButton onClick={()=>{handlePedir()}}>
                 <AddShoppingCartIcon/>
             </IconButton>
+            {stockCantidad<5&&<>
+                Item proximo a acabarse reponer
+            </>}
         </div>
     )
 }
